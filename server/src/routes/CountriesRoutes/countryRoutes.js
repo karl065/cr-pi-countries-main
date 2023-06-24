@@ -3,7 +3,7 @@ const {
   getCountry,
   getCountryById,
   getCountryByName,
-} = require('../../Controllers/ControllersCountries/getCountry');
+} = require('../../Controllers/ControllersCountries/getCountry.js');
 const router = express.Router();
 
 router.get('/', (req, res, next) => {
