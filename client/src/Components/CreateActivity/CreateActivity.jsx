@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable react/no-unknown-property */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/prop-types */
@@ -9,6 +10,7 @@ import {
   postActivity,
 } from '../../Utils/Redux/Actions';
 import {useEffect, useState} from 'react';
+import {createActivityVal} from '../../Utils/Validations/Validations';
 
 const CreateActivity = (props) => {
   const [activityData, setActivityData] = useState({
@@ -18,7 +20,9 @@ const CreateActivity = (props) => {
     temporada: '',
     countryId: [],
   });
+  const [error, setError] = useState({});
   const [selectedOptions, setSelectedOptions] = useState([]);
+  const [duracion, setDuracion] = useState('');
 
   const temporada = ['Verano', 'Otoño', 'Invierno', 'Primavera'];
 
@@ -40,7 +44,18 @@ const CreateActivity = (props) => {
       ...prevActivityData,
       countryId: selectedOptions,
     }));
-  }, [selectedOptions]);
+    setActivityData({
+      ...activityData,
+      duracion: duracion,
+    });
+    setError(
+      createActivityVal({
+        ...activityData,
+        duracion: duracion,
+        countryId: selectedOptions,
+      })
+    );
+  }, [selectedOptions, duracion]);
 
   const removeOption = (index, e) => {
     e.preventDefault();
@@ -53,26 +68,63 @@ const CreateActivity = (props) => {
     }));
   };
 
+  const handlerDurationH = (e) => {
+    let time = e.target.value;
+    if (time < 10) time = '0' + time;
+    if (duracion.length === 0 || duracion.length < 3) {
+      setDuracion(time + ':00');
+    } else {
+      const partDuration = duracion.split(':');
+      partDuration[0] = time;
+      setDuracion(partDuration.join(':'));
+    }
+  };
+  const handlerDurationM = (e) => {
+    let time = e.target.value;
+    if (time < 10) time = '0' + time;
+    if (duracion.length < 3) {
+      setDuracion(duracion + ':' + time);
+    } else {
+      const partDuration = duracion.split(':');
+      partDuration[1] = time;
+      setDuracion(partDuration.join(':'));
+    }
+    setActivityData({
+      ...activityData,
+      duracion: duracion,
+    });
+  };
   const handleChange = (e) => {
     setActivityData({
       ...activityData,
       [e.target.name]: e.target.value,
     });
+    setError(
+      createActivityVal({
+        ...activityData,
+        [e.target.name]: e.target.value,
+      })
+    );
   };
 
   const handleClick = (e) => {
     e.preventDefault();
-    props.postActivity(activityData);
-    setActivityData({
-      nombre: '',
-      dificultad: '',
-      duracion: '',
-      temporada: '',
-      countryId: [],
-    });
-    setSelectedOptions([]);
+    const errorsArray = Object.values(error);
+    if (errorsArray.length === 0) {
+      props.postActivity(activityData);
+      setActivityData({
+        nombre: '',
+        dificultad: '',
+        duracion: '',
+        temporada: '',
+        countryId: [],
+      });
+      setSelectedOptions([]);
+      setError({});
+    } else {
+      window.alert('Los campos no deben estar vacios');
+    }
   };
-  useEffect(() => {}, []);
 
   return (
     <div>
@@ -85,22 +137,39 @@ const CreateActivity = (props) => {
           value={activityData.nombre}
           placeholder="Actividad"
         />
+        <h3>{error.nombre}</h3>
         <label>Dificultad</label>
-        <input
-          type="text"
+        <select
           name="dificultad"
           onChange={handleChange}
           value={activityData.dificultad}
-          placeholder="Dificultad"
-        />
+        >
+          <option value="">Sel</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+        </select>
+        <h3>{error.dificultad}</h3>
         <label>Duracion</label>
-        <input
-          type="time"
-          name="duracion"
-          onChange={handleChange}
-          value={activityData.duracion}
-          placeholder="Duracion"
-        />
+        <div>
+          <input
+            onChange={handlerDurationH}
+            type="number"
+            min="00"
+            max="36"
+            placeholder="Horas"
+          />
+          <input
+            onChange={handlerDurationM}
+            type="number"
+            min="00"
+            max="59"
+            placeholder="Minutos"
+          />
+        </div>
+        <h3>{error.duracion}</h3>
         <label>Temporada</label>
         <select
           name="temporada"
@@ -116,6 +185,7 @@ const CreateActivity = (props) => {
             </option>
           ))}
         </select>
+        <h3>{error.temporada}</h3>
         <div>
           {selectedOptions.map((option, index) => (
             <button key={index} onClick={(e) => removeOption(index, e)}>
@@ -131,6 +201,7 @@ const CreateActivity = (props) => {
             </option>
           ))}
         </select>
+        <h3>{error.countryId}</h3>
         <button onClick={handleClick}>Crear Actividad</button>
       </form>
     </div>
