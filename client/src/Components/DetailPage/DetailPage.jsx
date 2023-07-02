@@ -1,26 +1,43 @@
 /* eslint-disable react-refresh/only-export-components */
 /* eslint-disable react/prop-types */
-
-// import {useParams} from 'react-router-dom';
 import {connect} from 'react-redux';
+import styles from './DetailPage.module.css';
 
 const DetailPage = (props) => {
   const {countriesById} = props;
   return (
-    <div>
+    <div
+      className={styles.container}
+      style={{backgroundImage: `url(${countriesById.bandera})`}}
+    >
       <div>
+        <h1>{countriesById.id}</h1>
+        <img src={countriesById.bandera} alt={countriesById.nombre} />
         <div>
-          <img src={countriesById.bandera} alt={countriesById.nombre} />
-        </div>
-        <div>
-          <h1>{countriesById.id}</h1>
           <h1>{countriesById.nombre}</h1>
         </div>
-        <h3>{countriesById.continente}</h3>
-        <h3>{countriesById.capital}</h3>
-        <h3>{countriesById.subregion}</h3>
-        <h3>{countriesById.area}</h3>
-        <h3>{countriesById.poblacion}</h3>
+      </div>
+      <div>
+        <div className={styles.filas}>
+          <label>Continente:</label>
+          <h3>{countriesById.continente}</h3>
+        </div>
+        <div className={styles.filas}>
+          <label>Capital:</label>
+          <h3>{countriesById.capital}</h3>
+        </div>
+        <div className={styles.filas}>
+          <label>Subregion:</label>
+          <h3>{countriesById.subregion}</h3>
+        </div>
+        <div className={styles.filas}>
+          <label>Area:</label>
+          <h3>{countriesById.area}</h3>
+        </div>
+        <div className={styles.filas}>
+          <label>Poblacion:</label>
+          <h3>{countriesById.poblacion}</h3>
+        </div>
       </div>
     </div>
   );

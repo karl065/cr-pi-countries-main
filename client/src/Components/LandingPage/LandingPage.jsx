@@ -3,13 +3,15 @@ import styles from './LandingPage.module.css';
 
 const LandingPage = () => {
   return (
-    <div>
+    <div className={styles.contenedor}>
       <img
         className={styles.imagen}
-        src="https://res.cloudinary.com/dpjeltekx/image/upload/v1687302834/PI/countries_mednhr.png"
+        src="https://res.cloudinary.com/dpjeltekx/image/upload/v1688009086/PI/1920x1200-px-artwork-blue-Earth-eyes-maps-1806577-wallhere.com_eozfnt.jpg"
         alt="Countries"
       />
-      <Link to="/home">Ingresar</Link>
+      <Link className={styles.boton} to="/home">
+        Ingresar
+      </Link>
     </div>
   );
 };

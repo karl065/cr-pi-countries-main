@@ -3,6 +3,7 @@
 import {useState} from 'react';
 import {getByName} from '../../Utils/Redux/Actions.js';
 import {connect} from 'react-redux';
+import styles from './SearchBar.module.css';
 
 const SearchBar = (props) => {
   const [name, setName] = useState('');
@@ -23,7 +24,7 @@ const SearchBar = (props) => {
     }
   };
   return (
-    <div>
+    <div className={styles.contenedor}>
       <input
         type="search"
         value={name}

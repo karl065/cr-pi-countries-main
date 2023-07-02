@@ -1,18 +1,18 @@
 const express = require('express');
 const {
-  getCountry,
-  getCountryById,
-  getCountryByName,
-} = require('../../Controllers/ControllersCountries/getCountry.js');
+  getHandlerCountry,
+  getHandlerById,
+  getHandlerByName,
+} = require('../../Handlers/HandlresCountry/HandlersCountry.js');
 const router = express.Router();
 
 router.get('/', (req, res, next) => {
   if (Object.keys(req.query).length > 0) {
-    getCountryByName(req, res, next);
+    getHandlerByName(req, res, next);
   } else {
-    getCountry(req, res, next);
+    getHandlerCountry(req, res, next);
   }
 });
-router.get('/:id', getCountryById);
+router.get('/:id', getHandlerById);
 
 module.exports = router;

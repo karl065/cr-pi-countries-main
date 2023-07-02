@@ -5,19 +5,38 @@ import SearchBar from '../SearchBar/SearchBar';
 import styles from './Nav.module.css';
 import {deleteByName, filterCountryByActivity} from '../../Utils/Redux/Actions';
 import {connect} from 'react-redux';
+import {useState} from 'react';
 
 const Nav = (props) => {
   const deleteFind = () => {
     props.filterCountryByActivity([]);
     props.deleteByName([]);
   };
+
+  const [isOpen, setIsOpen] = useState(false);
+
   return (
     <div className={styles.container}>
-      <Link onClick={deleteFind} to="/home">
-        Home
-      </Link>
-      <SearchBar></SearchBar>
-      <Link to="/createactivity">Crear Actividad</Link>
+      <div className={styles.searchBar}>
+        <SearchBar />
+      </div>
+      <div
+        className={`${styles.links} ${isOpen ? styles.open : styles.closed}`}
+      >
+        <Link onClick={deleteFind} to="/home">
+          Home
+        </Link>
+        <Link to="/createactivity">Crear Actividad</Link>
+        <Link to="/">Back</Link>
+      </div>
+      <div
+        className={`${styles.toggle} ${isOpen && styles.open}`}
+        onClick={() => setIsOpen(!isOpen)}
+      >
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
     </div>
   );
 };

@@ -11,6 +11,7 @@ import {
 } from '../../Utils/Redux/Actions';
 import {useEffect, useState} from 'react';
 import {createActivityVal} from '../../Utils/Validations/Validations';
+import styles from './CreateActivity.module.css';
 
 const CreateActivity = (props) => {
   const [activityData, setActivityData] = useState({
@@ -40,13 +41,10 @@ const CreateActivity = (props) => {
   };
 
   useEffect(() => {
-    setActivityData((prevActivityData) => ({
-      ...prevActivityData,
-      countryId: selectedOptions,
-    }));
     setActivityData({
       ...activityData,
       duracion: duracion,
+      countryId: selectedOptions,
     });
     setError(
       createActivityVal({
@@ -95,6 +93,7 @@ const CreateActivity = (props) => {
     });
   };
   const handleChange = (e) => {
+    e.preventDefault();
     setActivityData({
       ...activityData,
       [e.target.name]: e.target.value,
@@ -106,7 +105,6 @@ const CreateActivity = (props) => {
       })
     );
   };
-
   const handleClick = (e) => {
     e.preventDefault();
     const errorsArray = Object.values(error);
@@ -127,8 +125,10 @@ const CreateActivity = (props) => {
   };
 
   return (
-    <div>
-      <form>
+    <div className={styles.container}>
+      <h1>Crea una activity</h1>
+
+      <div>
         <label>Actividad</label>
         <input
           type="text"
@@ -138,6 +138,8 @@ const CreateActivity = (props) => {
           placeholder="Actividad"
         />
         <h3>{error.nombre}</h3>
+      </div>
+      <div>
         <label>Dificultad</label>
         <select
           name="dificultad"
@@ -152,6 +154,8 @@ const CreateActivity = (props) => {
           <option value="5">5</option>
         </select>
         <h3>{error.dificultad}</h3>
+      </div>
+      <div>
         <label>Duracion</label>
         <div>
           <input
@@ -170,12 +174,10 @@ const CreateActivity = (props) => {
           />
         </div>
         <h3>{error.duracion}</h3>
+      </div>
+      <div>
         <label>Temporada</label>
-        <select
-          name="temporada"
-          onChange={handleChange}
-          value={activityData.temporada}
-        >
+        <select name="temporada" onChange={handleChange}>
           <option value={activityData.temporada}>
             Seleccione una temporada
           </option>
@@ -186,24 +188,24 @@ const CreateActivity = (props) => {
           ))}
         </select>
         <h3>{error.temporada}</h3>
-        <div>
-          {selectedOptions.map((option, index) => (
-            <button key={index} onClick={(e) => removeOption(index, e)}>
-              {option}
-            </button>
-          ))}
-        </div>
-        <select value="" onChange={handleSelect}>
-          <option value="">Seleccionar Pais</option>
-          {idCountries.map((country, index) => (
-            <option value={country} key={index}>
-              {country}
-            </option>
-          ))}
-        </select>
-        <h3>{error.countryId}</h3>
-        <button onClick={handleClick}>Crear Actividad</button>
-      </form>
+      </div>
+      <div>
+        {selectedOptions.map((option, index) => (
+          <button key={index} onClick={(e) => removeOption(index, e)}>
+            {option}
+          </button>
+        ))}
+      </div>
+      <select value="" onChange={handleSelect}>
+        <option value="">Seleccionar Pais</option>
+        {idCountries.map((country, index) => (
+          <option value={country} key={index}>
+            {country}
+          </option>
+        ))}
+      </select>
+      <h3>{error.countryId}</h3>
+      <button onClick={handleClick}>Crear Actividad</button>
     </div>
   );
 };

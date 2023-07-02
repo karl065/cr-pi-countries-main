@@ -1,7 +1,104 @@
 .container {
   display: flex;
   align-items: center;
-  flex-wrap: wrap;
-  justify-content: center;
-  margin: 10px;
+  justify-content: space-between;
+  background-image: url('https://res.cloudinary.com/dpjeltekx/image/upload/v1688255132/PI/wallpaperflare.com_wallpaper_ilvxru.jpg');
+  background-size: 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  height: 100px;
+}
+
+.container .links {
+  display: flex;
+  gap: 20px;
+  text-transform: uppercase;
+  align-items: center;
+}
+.container a {
+  display: flex;
+  color: black;
+  position: relative;
+  margin: 15px;
+  font-size: 1.5rem;
+  font-weight: 600;
+  text-decoration: none;
+  text-shadow: 2px 2px 2px white, 2px 2px 25px yellow, 2px 2px 5px yellow;
+}
+
+.container .toggle {
+  display: none;
+}
+.container .searchBar {
+  display: flex;
+  margin-left: 700px;
+}
+
+@media only screen and (max-width: 760px) {
+  .container a {
+    font-size: 0.875rem;
+  }
+  .links {
+    position: fixed;
+    top: 60px;
+    right: 0;
+    background: rgba(24, 17, 114, 0.7);
+    display: flex;
+    flex-direction: column;
+    width: 200px;
+    height: 10;
+    transform: translateX(100%);
+    transition: 0.3s ease all;
+    z-index: 9999;
+    border-bottom-left-radius: 25%;
+    box-shadow: 1px 1px 2px black, 0 0 25px yellow, 0 0 5px #daa520;
+  }
+  .links.closed {
+    box-shadow: none;
+  }
+  .links a {
+    margin: 5px 0;
+  }
+
+  .links.open {
+    transform: translateX(0) !important;
+  }
+
+  .toggle {
+    display: flex !important;
+    flex-direction: column;
+    margin: 15px;
+  }
+  .toggle span {
+    width: 30px;
+    height: 4px;
+    background: black;
+    margin-bottom: 5px;
+    border-radius: 2px;
+    transform-origin: 5px 0px;
+    transition: all 0.2s linear;
+  }
+  .toggle.open > span {
+    transform: rotate(45deg) translate(0px, 0px);
+  }
+  .toggle.open > span:nth-child(2) {
+    display: none;
+  }
+  .toggle.open > span:nth-child(3) {
+    transform: rotate(-45deg) translate(-5px, 1px);
+  }
+}
+
+@media only screen and (max-width: 1410px) {
+  .container a {
+    font-size: 1.2rem;
+  }
+  .container .searchBar {
+    margin-left: 5vw;
+  }
+}
+@media only screen and (min-width: 761px) and (max-width: 3840px) {
+  .container a {
+    font-size: 1.2rem;
+  }
 }

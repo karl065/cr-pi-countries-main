@@ -6,5 +6,57 @@
 .filas {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  min-height: 100vh;
+  width: 100vw;
+  background-image: url('https://res.cloudinary.com/dpjeltekx/image/upload/v1688009398/PI/1920x1080-px-Earth-map-old-map-1343571-wallhere.com_ypku0l.jpg');
+}
+
+.filas button {
+  inline-size: min-content;
+  text-transform: uppercase;
+  font-size: small;
+  text-align: center;
+  text-shadow: 2px 2px 2px white, 2px 2px 25px yellow, 2px 2px 5px white;
+  background-color: transparent;
+  color: black;
+  border: none;
+  outline: none;
+}
+.filas button:focus {
+  outline: none;
+}
+
+.filas button:hover {
+  border: none;
+}
+.filas h3 {
+  margin: 20px;
+  color: black;
+  text-shadow: 2px 2px 2px white, 2px 2px 25px yellow, 2px 2px 5px white;
+}
+
+select {
+  margin: 10px;
+  text-transform: uppercase;
+  justify-items: center;
+  text-align: center;
+  background-color: transparent;
+  color: black;
+  text-shadow: 2px 2px 2px white, 2px 2px 25px yellow, 2px 2px 5px white;
+  border: none;
+  outline: none;
+  border-radius: 25%;
+  font-weight: bold;
+  font-size: medium;
+}
+select option {
+  background-color: black;
+  color: white;
 }

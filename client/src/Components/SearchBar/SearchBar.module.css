@@ -1,0 +1,58 @@
+.contenedor {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.contenedor input {
+  display: flex;
+  margin-right: 20px;
+  align-items: center;
+  box-shadow: 2px 2px 2px white, 2px 2px 25px yellow, 2px 2px 5px white;
+  text-shadow: 2px 2px 2px white, 2px 2px 25px yellow, 2px 2px 5px white;
+  background-color: transparent;
+  border-radius: 8px;
+  border: 2px solid black;
+  color: black;
+  text-transform: uppercase;
+  font-weight: bold;
+}
+
+.contenedor button {
+  inline-size: auto;
+  text-transform: uppercase;
+  font-size: small;
+  text-align: center;
+  text-shadow: 2px 2px 2px white, 2px 2px 25px yellow, 2px 2px 100px white;
+  box-shadow: 2px 2px 2px white, 2px 2px 25px yellow, 2px 2px 5px white;
+  background-color: rgba(10, 10, 10, 0.5);
+  color: black;
+  cursor: pointer;
+  border: 1px solid;
+  font-weight: bold;
+  border-radius: 8px;
+}
+
+.contenedor button:hover,
+.contenedor button:active {
+  background-color: black;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+@media (max-width: 600px) {
+  .contenedor button {
+    background-image: url('https://res.cloudinary.com/dpjeltekx/image/upload/v1688261913/PI/pngwing.com_b6wfcx.png');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    padding: 10px;
+    width: 30px;
+    height: 30px;
+    text-indent: -9999px;
+    border: none;
+    box-shadow: none;
+    background-color: transparent;
+  }
+}

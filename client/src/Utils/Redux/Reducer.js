@@ -19,9 +19,13 @@ const initialState = {
   countries: [],
   filterCountries: [],
   idCountries: [],
+  filterContinent: [],
+  filterActivities: [],
   selectedIds: [],
   activities: [],
   countriesById: [],
+  optionContinent: '',
+  optionActivity: '',
 };
 
 const country = (state = initialState, actions) => {
@@ -52,11 +56,30 @@ const country = (state = initialState, actions) => {
         countryByName: actions.payload,
       };
     case ORDER_BY_CONTINENT:
-      if (actions.payload === 'ALL') {
-        return {
-          ...state,
-          countries: state.countries,
-        };
+      if (state.optionActivity) {
+        const filterCountryByActivity = state.countries.filter((country) => {
+          const countryActivities = country.Activities.filter(
+            (activity) => activity.nombre === state.optionActivity
+          );
+          return countryActivities.length > 0;
+        });
+        state.filterActivities = filterCountryByActivity;
+        if (state.filterActivities.length > 0) {
+          const orderContinent = state.filterActivities.filter((country) =>
+            country.continente.includes(actions.payload)
+          );
+          if (actions.payload === 'All' && state.filterActivities.length > 0) {
+            return {
+              ...state,
+              filterCountries: state.filterActivities,
+            };
+          }
+          return {
+            ...state,
+            filterCountries: orderContinent,
+            optionContinent: actions.payload,
+          };
+        }
       }
       const orderContinent = state.countries.filter((country) =>
         country.continente.includes(actions.payload)
@@ -64,6 +87,8 @@ const country = (state = initialState, actions) => {
       return {
         ...state,
         filterCountries: orderContinent,
+        filterContinent: orderContinent,
+        optionContinent: actions.payload,
       };
     case GET_ID_COUNTRIES:
       return {
@@ -86,11 +111,27 @@ const country = (state = initialState, actions) => {
         activities: actions.payload,
       };
     case FILTER_COUNTRY_BY_ACTIVITY:
-      if (actions.payload.length === 0) {
-        return {
-          ...state,
-          filterCountries: actions.payload,
-        };
+      if (state.optionContinent) {
+        const orderContinent = state.countries.filter((country) =>
+          country.continente.includes(state.optionContinent)
+        );
+        state.filterContinent = orderContinent;
+        if (state.filterContinent.length > 0) {
+          const filterCountryByActivity = state.filterContinent.filter(
+            (country) => {
+              const countryActivities = country.Activities.filter(
+                (activity) => activity.nombre === actions.payload
+              );
+              return countryActivities.length > 0;
+            }
+          );
+          return {
+            ...state,
+            filterCountries: filterCountryByActivity,
+            filterActivities: filterCountryByActivity,
+            optionActivity: actions.payload,
+          };
+        }
       }
       const filterCountryByActivity = state.countries.filter((country) => {
         const countryActivities = country.Activities.filter(
@@ -101,29 +142,64 @@ const country = (state = initialState, actions) => {
       return {
         ...state,
         filterCountries: filterCountryByActivity,
+        filterActivities: filterCountryByActivity,
+        optionActivity: actions.payload,
       };
     case ORDERALFA:
       if (actions.payload === 'A') {
-        const orderCountries = [...state.countries].sort((a, b) =>
+        if (state.filterCountries.length === 0) {
+          const orderCountries = [...state.countries].sort((a, b) =>
+            a.nombre.localeCompare(b.nombre)
+          );
+          return {
+            ...state,
+            countries: orderCountries,
+          };
+        }
+        const orderCountries = [...state.filterCountries].sort((a, b) =>
           a.nombre.localeCompare(b.nombre)
         );
         return {
           ...state,
-          countries: orderCountries,
+          filterCountries: orderCountries,
         };
       } else if (actions.payload === 'D') {
-        const orderCountries = [...state.countries].sort((a, b) =>
+        if (state.filterCountries.length === 0) {
+          const orderCountries = [...state.countries].sort((a, b) =>
+            b.nombre.localeCompare(a.nombre)
+          );
+          return {
+            ...state,
+            countries: orderCountries,
+          };
+        }
+        const orderCountries = [...state.filterCountries].sort((a, b) =>
           b.nombre.localeCompare(a.nombre)
         );
         return {
           ...state,
-          countries: orderCountries,
+          filterCountries: orderCountries,
         };
       }
       return state;
     case ORDERPOB:
       if (actions.payload === 'A') {
-        const orderCountries = [...state.countries].sort((a, b) => {
+        if (state.filterCountries.length === 0) {
+          const orderCountries = [...state.countries].sort((a, b) => {
+            if (a.poblacion > b.poblacion) {
+              return 1;
+            }
+            if (a.poblacion < b.poblacion) {
+              return -1;
+            }
+            return 0;
+          });
+          return {
+            ...state,
+            countries: orderCountries,
+          };
+        }
+        const orderCountries = [...state.filterCountries].sort((a, b) => {
           if (a.poblacion > b.poblacion) {
             return 1;
           }
@@ -134,10 +210,25 @@ const country = (state = initialState, actions) => {
         });
         return {
           ...state,
-          countries: orderCountries,
+          filterCountries: orderCountries,
         };
       } else if (actions.payload === 'D') {
-        const orderCountries = [...state.countries].sort((a, b) => {
+        if (state.filterCountries.length === 0) {
+          const orderCountries = [...state.countries].sort((a, b) => {
+            if (a.poblacion > b.poblacion) {
+              return -1;
+            }
+            if (a.poblacion < b.poblacion) {
+              return 1;
+            }
+            return 0;
+          });
+          return {
+            ...state,
+            countries: orderCountries,
+          };
+        }
+        const orderCountries = [...state.filterCountries].sort((a, b) => {
           if (a.poblacion > b.poblacion) {
             return -1;
           }
@@ -148,7 +239,7 @@ const country = (state = initialState, actions) => {
         });
         return {
           ...state,
-          countries: orderCountries,
+          filterCountries: orderCountries,
         };
       }
       return state;

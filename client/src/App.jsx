@@ -4,12 +4,15 @@ import DetailPage from './Components/DetailPage/DetailPage';
 import HomePage from './Components/HomePage/HomePage';
 import LandingPage from './Components/LandingPage/LandingPage';
 import Nav from './Components/Nav/Nav.jsx';
-import {Route, Routes} from 'react-router-dom';
+import {Route, Routes, useLocation} from 'react-router-dom';
 
 function App() {
+  const location = useLocation();
+  const verNav = !['/'].includes(location.pathname);
+
   return (
     <div className="App">
-      <Nav />
+      {verNav && <Nav />}
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/home" element={<HomePage />} />

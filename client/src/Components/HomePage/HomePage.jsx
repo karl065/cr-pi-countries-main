@@ -18,11 +18,24 @@ import Card from '../Card/Card.jsx';
 const HomePage = (props) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [countryDisp, setCountryDisp] = useState([]);
+  const [selectActivity, setSelectActivity] = useState('All');
+  const [selectContinent, setSelectContinent] = useState('All');
   const [activityOptions, setActivityOptions] = useState([]);
-  const {countries, countryByName, filterCountries, activities} = props;
+  const {
+    countries,
+    countryByName,
+    filterCountries,
+    activities,
+    filterContinent,
+  } = props;
 
   const countriesByPage = 10;
-  const totalPages = Math.ceil(countries.length / countriesByPage);
+  let totalPages = 0;
+  if (filterCountries.length === 0) {
+    totalPages = Math.ceil(countries.length / countriesByPage);
+  } else {
+    totalPages = Math.ceil(filterCountries.length / countriesByPage);
+  }
   const lastCountry = currentPage * countriesByPage;
   const firstCountry = lastCountry - countriesByPage;
 
@@ -35,12 +48,15 @@ const HomePage = (props) => {
   };
 
   const handleFilterContinent = (e) => {
+    setCurrentPage(1);
     const selectValue = e.target.value;
     props.orderByContinent(selectValue);
+    setSelectContinent(selectValue);
   };
   const handleFilterActivity = (e) => {
     const selectValue = e.target.value;
     props.filterCountryByActivity(selectValue);
+    setSelectActivity(selectValue);
   };
   const handleOrderAlfa = (e) => {
     const selectValue = e.target.value;
@@ -54,8 +70,13 @@ const HomePage = (props) => {
   useEffect(() => {
     if (countryByName.length !== 0) {
       setCountryDisp(countryByName);
-    } else if (filterCountries.length !== 0) {
+    } else if (filterCountries.length === 0 && selectActivity !== 'All') {
       setCountryDisp(filterCountries);
+    } else if (filterCountries.length === 0 && selectContinent !== 'All') {
+      setCountryDisp(filterContinent);
+    } else if (filterCountries.length !== 0) {
+      const currentCountries = filterCountries.slice(firstCountry, lastCountry);
+      setCountryDisp(currentCountries);
     } else {
       const currentCountries = countries.slice(firstCountry, lastCountry);
       setCountryDisp(currentCountries);
@@ -73,8 +94,8 @@ const HomePage = (props) => {
   }, []);
 
   return (
-    <div className={styles.filas}>
-      <div className={styles.columnas}>
+    <div className={styles.container}>
+      <div>
         <select onChange={handleFilterContinent}>
           <option value="All">All</option>
           <option value="Asia">Asia</option>
@@ -102,37 +123,42 @@ const HomePage = (props) => {
           <option value="D">Mayor Poblacion</option>
         </select>
       </div>
-      {countryDisp.map((country, index) => (
-        <div key={index} className={styles.columnas}>
-          {
-            <Card
-              id={country.id}
-              imagen={country.bandera}
-              nombre={country.nombre}
-              continente={country.continente}
-              capital={country.capital}
-              subregion={country.subregion}
-              area={country.area}
-              poblacion={country.poblacion}
-            />
-          }
-        </div>
-      ))}
-      <button
-        hidden={currentPage === 1}
-        onClick={() => handlePageChange(currentPage - 1)}
-      >
-        anterior
-      </button>
-      <button
-        hidden={currentPage === totalPages}
-        onClick={() => handlePageChange(currentPage + 1)}
-      >
-        siguiente
-      </button>
-      <button hidden={countryByName.length === 0} onClick={deleteFind}>
-        All
-      </button>
+
+      <div className={styles.filas}>
+        {countryDisp.map((country, index) => (
+          <div key={index} className={styles.columnas}>
+            {
+              <Card
+                id={country.id}
+                imagen={country.bandera}
+                nombre={country.nombre}
+                continente={country.continente}
+              />
+            }
+          </div>
+        ))}
+      </div>
+      <div className={styles.filas}>
+        <button
+          hidden={currentPage === 1 || countryDisp.length === 1}
+          onClick={() => handlePageChange(currentPage - 1)}
+        >
+          ← anterior
+        </button>
+        <h3>{currentPage}</h3>
+        <h3>de</h3>
+        <h3>{totalPages}</h3>
+        <button
+          className={styles.boton}
+          hidden={currentPage === totalPages || countryDisp.length === 1}
+          onClick={() => handlePageChange(currentPage + 1)}
+        >
+          siguiente →
+        </button>
+        <button hidden={countryByName.length === 0} onClick={deleteFind}>
+          All
+        </button>
+      </div>
     </div>
   );
 };
@@ -143,6 +169,7 @@ const mapStateToProps = (state) => {
     activities: state.activities,
     countries: state.countries,
     filterCountries: state.filterCountries,
+    filterContinent: state.filterContinent,
   };
 };
 
