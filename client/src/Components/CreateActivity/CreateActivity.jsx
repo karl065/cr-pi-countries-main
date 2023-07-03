@@ -66,32 +66,34 @@ const CreateActivity = (props) => {
     }));
   };
 
-  const handlerDurationH = (e) => {
+  const handleDurationChange = (e) => {
     let time = e.target.value;
     if (time < 10) time = '0' + time;
-    if (duracion.length === 0 || duracion.length < 3) {
-      setDuracion(time + ':00');
-    } else {
-      const partDuration = duracion.split(':');
-      partDuration[0] = time;
-      setDuracion(partDuration.join(':'));
+
+    if (e.target.name === 'horas') {
+      if (duracion.length === 0 || duracion.length < 3) {
+        setDuracion(time + ':00');
+      } else {
+        const partDuration = duracion.split(':');
+        partDuration[0] = time;
+        setDuracion(partDuration.join(':'));
+      }
+    } else if (e.target.name === 'minutos') {
+      if (duracion.length < 3) {
+        setDuracion(duracion + ':' + time);
+      } else {
+        const partDuration = duracion.split(':');
+        partDuration[1] = time;
+        setDuracion(partDuration.join(':'));
+      }
     }
-  };
-  const handlerDurationM = (e) => {
-    let time = e.target.value;
-    if (time < 10) time = '0' + time;
-    if (duracion.length < 3) {
-      setDuracion(duracion + ':' + time);
-    } else {
-      const partDuration = duracion.split(':');
-      partDuration[1] = time;
-      setDuracion(partDuration.join(':'));
-    }
+
     setActivityData({
       ...activityData,
       duracion: duracion,
     });
   };
+
   const handleChange = (e) => {
     e.preventDefault();
     setActivityData({
@@ -119,6 +121,7 @@ const CreateActivity = (props) => {
       });
       setSelectedOptions([]);
       setError({});
+      window.alert('Actividad Creada con exito');
     } else {
       window.alert('Los campos no deben estar vacios');
     }
@@ -127,85 +130,88 @@ const CreateActivity = (props) => {
   return (
     <div className={styles.container}>
       <h1>Crea una activity</h1>
-
       <div>
-        <label>Actividad</label>
-        <input
-          type="text"
-          name="nombre"
-          onChange={handleChange}
-          value={activityData.nombre}
-          placeholder="Actividad"
-        />
-        <h3>{error.nombre}</h3>
+        <form className={styles.formulario}>
+          <div>
+            <label>Actividad</label>
+            <input
+              type="text"
+              name="nombre"
+              onChange={handleChange}
+              value={activityData.nombre}
+              placeholder="Actividad"
+            />
+            <h3>{error.nombre}</h3>
+            <label>Dificultad</label>
+            <select
+              name="dificultad"
+              onChange={handleChange}
+              value={activityData.dificultad}
+            >
+              <option value="">Sel</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+            </select>
+            <h3>{error.dificultad}</h3>
+          </div>
+          <div>
+            <label>Duracion</label>
+            <div>
+              <input
+                onChange={handleDurationChange}
+                type="number"
+                min="00"
+                max="36"
+                placeholder="Horas"
+              />
+              <input
+                onChange={handleDurationChange}
+                type="number"
+                min="00"
+                max="59"
+                placeholder="Minutos"
+              />
+            </div>
+            <h3>{error.duracion}</h3>
+            <label>Temporada</label>
+            <select name="temporada" onChange={handleChange}>
+              <option value={activityData.temporada}>
+                Seleccione una temporada
+              </option>
+              {temporada.map((temp, index) => (
+                <option key={index} value={temp}>
+                  {temp}
+                </option>
+              ))}
+            </select>
+            <h3>{error.temporada}</h3>
+          </div>
+          <div>
+            <div className={styles.selectPais}>
+              {selectedOptions.map((option, index) => (
+                <button key={index} onClick={(e) => removeOption(index, e)}>
+                  {option}
+                </button>
+              ))}
+            </div>
+            <div>
+              <select value="" onChange={handleSelect}>
+                <option value="">Seleccionar Pais</option>
+                {idCountries.map((country, index) => (
+                  <option value={country} key={index}>
+                    {country}
+                  </option>
+                ))}
+              </select>
+              <h3>{error.countryId}</h3>
+            </div>
+          </div>
+        </form>
+        <button onClick={handleClick}>Crear Actividad</button>
       </div>
-      <div>
-        <label>Dificultad</label>
-        <select
-          name="dificultad"
-          onChange={handleChange}
-          value={activityData.dificultad}
-        >
-          <option value="">Sel</option>
-          <option value="1">1</option>
-          <option value="2">2</option>
-          <option value="3">3</option>
-          <option value="4">4</option>
-          <option value="5">5</option>
-        </select>
-        <h3>{error.dificultad}</h3>
-      </div>
-      <div>
-        <label>Duracion</label>
-        <div>
-          <input
-            onChange={handlerDurationH}
-            type="number"
-            min="00"
-            max="36"
-            placeholder="Horas"
-          />
-          <input
-            onChange={handlerDurationM}
-            type="number"
-            min="00"
-            max="59"
-            placeholder="Minutos"
-          />
-        </div>
-        <h3>{error.duracion}</h3>
-      </div>
-      <div>
-        <label>Temporada</label>
-        <select name="temporada" onChange={handleChange}>
-          <option value={activityData.temporada}>
-            Seleccione una temporada
-          </option>
-          {temporada.map((temp, index) => (
-            <option key={index} value={temp}>
-              {temp}
-            </option>
-          ))}
-        </select>
-        <h3>{error.temporada}</h3>
-      </div>
-      <div>
-        {selectedOptions.map((option, index) => (
-          <button key={index} onClick={(e) => removeOption(index, e)}>
-            {option}
-          </button>
-        ))}
-      </div>
-      <select value="" onChange={handleSelect}>
-        <option value="">Seleccionar Pais</option>
-        {idCountries.map((country, index) => (
-          <option value={country} key={index}>
-            {country}
-          </option>
-        ))}
-      </select>
-      <h3>{error.countryId}</h3>
-      <button onClick={handleClick}>Crear Actividad</button>
     </div>
   );
 };

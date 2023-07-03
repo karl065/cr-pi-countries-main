@@ -6,10 +6,7 @@ import styles from './DetailPage.module.css';
 const DetailPage = (props) => {
   const {countriesById} = props;
   return (
-    <div
-      className={styles.container}
-      style={{backgroundImage: `url(${countriesById.bandera})`}}
-    >
+    <div className={styles.container}>
       <div>
         <h1>{countriesById.id}</h1>
         <img src={countriesById.bandera} alt={countriesById.nombre} />

@@ -95,7 +95,7 @@ const HomePage = (props) => {
 
   return (
     <div className={styles.container}>
-      <div>
+      <div className={styles.filtros}>
         <select onChange={handleFilterContinent}>
           <option value="All">All</option>
           <option value="Asia">Asia</option>
